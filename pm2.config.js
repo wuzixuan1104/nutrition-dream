@@ -6,7 +6,7 @@ module.exports = {
 
       max_memory_restart: '512M',
 
-      script: 'yarn',
+      script: 'npm',
       args:"start",
 
 
@@ -18,7 +18,7 @@ module.exports = {
 
       max_memory_restart: '512M',
 
-      script: 'yarn',
+      script: 'npm',
       args:"start",
 
       log_file: 'pm2-logs/Server.log',
