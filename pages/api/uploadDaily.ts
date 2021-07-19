@@ -1,6 +1,10 @@
 import fetcher from 'util/fetcher';
 import { JKObject } from 'data/interface/common';
+import { DAILY_TYPES } from 'data/interface/daily';
 import uploadToS3 from 'util/uploadToS3';
+import client from 'util/line';
+import lineDailyNoti from 'data/template/lineDailyNoti';
+import uuid from 'util/uuid';
 
 /** 
  * s3 config
@@ -33,7 +37,7 @@ export default async function uploadDaily(req, res): Promise<void> {
   const id = body?.id;
 
   const path = `nutrition/${id}/${date}.json`
-  
+  const newContent = [];
   const payload: JKObject = await getOldConfig({
     id, date, path, type, overwrite
   })
@@ -43,12 +47,18 @@ export default async function uploadDaily(req, res): Promise<void> {
     try {
       for (const data of content) {
         const imgUrl = await uploadImage(data?.img?.file);
-        payload?.categories?.[type].push({
+        newContent.push({
           imgUrl,
           content: data?.explan
         });
       }
+
+      payload?.categories?.[type].concat(newContent);
       
+      // send bot
+      const template = lineDailyNoti({ content: newContent, date, type: DAILY_TYPES?.[type] })
+      client.pushMessage(id, template);
+
       const updateConfig = await uploadConfig(path, payload);
       if (updateConfig)
         return res.status(200).json({ error: false, message: 'success' })
@@ -71,7 +81,7 @@ async function getOldConfig({
   };
 
   try {
-    const result: JKObject = await fetcher.get(`https://${process?.env?.S3_BUCKET}/${path}`);
+    const result: JKObject = await fetcher.get(`${process?.env?.S3_URL}${path}`);
     if (result) {
       payload = {
         ...result,
@@ -92,9 +102,10 @@ async function getOldConfig({
  * @returns 
  */
 async function uploadImage(file: JKObject): Promise<string> {
-  const key = `nutrition/img/${new Date().getTime()}_${file?.name}`.replace(/\s/g, '_');
+  const ext = file?.name.split('.').pop();
+  const key = `nutrition/img/${uuid()}-${new Date().getTime()}.${ext}`.replace(/\s/g, '_');
   const base64Url = file?.thumbUrl?.replace(`data:${file?.type};base64,`, '');
-  const url = `https://${process?.env?.S3_BUCKET}/${key}`;
+  const url = `${process?.env?.S3_URL}${key}`;
   
   const res = await uploadToS3({
     key: key, 
@@ -117,7 +128,6 @@ async function uploadConfig(path: string, payload: JKObject): Promise<string> {
     body: JSON.stringify(payload), 
     mimeType: 'application/json',
   })
-  console.log(res);
   
   return res;
 }

@@ -16,6 +16,8 @@ module.exports = {
     SITE_ENV: process.env.NODE_ENV,
     API_HOST: process.env.API_HOST,
     APP_HOST: process.env.APP_HOST,
+    S3_URL: process.env.S3_URL,
+    LINE_TOKEN: process.env.LINE_TOKEN,
 
     S3_BUCKET: s3.bucket,
     S3_SECRET: s3.secret,

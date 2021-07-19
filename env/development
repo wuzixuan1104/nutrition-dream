@@ -1,9 +1,7 @@
 NODE_ENV=development
 
-APP_HOST=https://sit-mkt.jkopay.app
+APP_HOST=https://nutr.dream.shari.tw/
 
-API_HOST=http://api
+S3_URL=https://cdn.shari.tw/
 
-S3_IMG_URL=
-
-S3_CONFIG_URL=
+LINE_TOKEN=8fmPPVPYictGjGRVuslzb1+hX0NZkh4ZqhZRMehSVLCXMm1MTJznu/DbPP0egW7TA2NghkX8nN6cfGEsNaDD29/n/KZ6mCEwFCCU8JCYo461HryoVIMoX8+uucwTeS+3kFai3mQjze3ckIziBmTqYQdB04t89/1O/w1cDnyilFU=

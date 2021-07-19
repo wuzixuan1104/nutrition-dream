@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "env-cmd -f env/development next dev -p 3001",
-    "start": "next start",
+    "start": "next start -p 3001",
     "build": "env-cmd -f env/production next build",
     "build:dev": "env-cmd -f env/development next build",
     "lint:eslint": "eslint 'pages/**/*.{ts,tsx}' --fix",
@@ -31,6 +31,7 @@
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.14.2",
     "@babel/plugin-proposal-optional-chaining": "^7.14.2",
     "@babel/preset-react": "^7.13.13",
+    "@line/bot-sdk": "^7.3.0",
     "@reduxjs/toolkit": "^1.5.1",
     "@types/node": "^15.6.1",
     "@types/ramda": "^0.27.40",
