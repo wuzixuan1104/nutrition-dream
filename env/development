@@ -1,0 +1,9 @@
+NODE_ENV=development
+
+APP_HOST=https://sit-mkt.jkopay.app
+
+API_HOST=http://api
+
+S3_IMG_URL=
+
+S3_CONFIG_URL=

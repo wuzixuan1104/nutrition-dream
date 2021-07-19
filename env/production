@@ -1,0 +1,9 @@
+NODE_ENV=production
+
+APP_HOST=https://mkt.jkopay.com
+
+API_HOST=
+
+S3_IMG_URL=
+
+S3_CONFIG_URL=
