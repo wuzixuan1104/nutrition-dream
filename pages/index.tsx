@@ -46,7 +46,7 @@ const DailyRecord: NextPage = () => {
     console.log('[fetch]', result.status);
   };
 
-  const onFinishFailed = async (errorInfo: any): void => {
+  const onFinishFailed = async (errorInfo: unknown) => {
     console.log('Failed:', errorInfo);
    
   };
