@@ -31,3 +31,16 @@
 ```html
 <div className="py-1 text-sm rounded-sm	bg-gray-200 hover:bg-gray-400" />
 ```
+
+##### pm2 設定
+
+## 啟動
+* 正式 `pm2 start pm2.config.js --only production`
+
+## 其他
+* 列出 `npx pm2 list`
+* 監控 `npx pm2 monit`
+* 移除 `npx pm2 kill`
+* 全部停止 `npx pm2 stop all`
+* 全部刪除 `npx pm2 delete all`
+* 全部重開 `npx pm2 restart all`
