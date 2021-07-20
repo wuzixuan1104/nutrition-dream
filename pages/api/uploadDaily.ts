@@ -1,3 +1,5 @@
+/* eslint-disable no-empty */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import fetcher from 'util/fetcher';
 import { JKObject } from 'data/interface/common';
 import { DAILY_TYPES } from 'data/interface/daily';
@@ -23,11 +25,12 @@ import uuid from 'util/uuid';
  *    },
  * }
  */
+
 export default async function uploadDaily(req, res): Promise<void> {
   if (req.method !== 'POST') {
     return res.status(400).json({ error: true, message: '沒有這個 method' })
   } 
-
+ 
   const body = req?.body && JSON.parse(req.body);
   const date = body?.date.slice(0, 10).replace(/\//g, '-');
   
@@ -38,7 +41,7 @@ export default async function uploadDaily(req, res): Promise<void> {
 
   const path = `nutrition/${id}/${date}.json`
   const newContent = [];
-  const payload: JKObject = await getOldConfig({
+  let payload: JKObject = await getOldConfig({
     id, date, path, type, overwrite
   })
   
@@ -53,12 +56,18 @@ export default async function uploadDaily(req, res): Promise<void> {
         });
       }
 
-      payload?.categories?.[type].concat(newContent);
+      payload = {
+        ...payload,
+        categories: {
+          ...payload?.categories,
+          [type]: payload?.categories?.[type].concat(newContent)
+        }
+      }
       
       // send bot
       const template = lineDailyNoti({ content: newContent, date, type: DAILY_TYPES?.[type] })
       client.pushMessage(id, template);
-
+      
       const updateConfig = await uploadConfig(path, payload);
       if (updateConfig)
         return res.status(200).json({ error: false, message: 'success' })
@@ -104,7 +113,8 @@ async function getOldConfig({
 async function uploadImage(file: JKObject): Promise<string> {
   const ext = file?.name.split('.').pop();
   const key = `nutrition/img/${uuid()}-${new Date().getTime()}.${ext}`.replace(/\s/g, '_');
-  const base64Url = file?.thumbUrl?.replace(`data:${file?.type};base64,`, '');
+  
+  const base64Url = file?.thumbUrl?.replace(`data:image/png;base64,`, '');
   const url = `${process?.env?.S3_URL}${key}`;
   
   const res = await uploadToS3({

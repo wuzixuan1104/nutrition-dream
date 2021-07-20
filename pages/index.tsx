@@ -25,8 +25,10 @@ const DailyRecord: NextPage = () => {
       console.error('Cannot send form post, missing query id');
       return;
     }
-    const result = await fetch('/api/uploadDaily', { 
+
+    const result = await fetch(`/api/uploadDaily?id=${id}`, { 
       method: 'POST',
+      // body: formData
       body: JSON.stringify({
         ...values,
         date: moment(values?.date, dateFormat),
@@ -44,12 +46,14 @@ const DailyRecord: NextPage = () => {
     console.log('[fetch]', result.status);
   };
 
-  const onFinishFailed = async (errorInfo: any) => {
+  const onFinishFailed = async (errorInfo: any): void => {
     console.log('Failed:', errorInfo);
    
   };
 
   const onChangeUploadFiles = ({ fileList: newFileList }, name): void => {
+    console.log(newFileList);
+    
     if (newFileList.length < 1) {
       const tmpFiles = { ...fileList[name] };
       delete tmpFiles[name];
@@ -129,7 +133,7 @@ const DailyRecord: NextPage = () => {
                         rules={[{ required: true, message: '請拍下你這餐的照片!' }]}
                       >
                         <Upload
-                          action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                          // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                           listType="picture-card"
                           fileList={fileList[name]}
                           onChange={(v) => onChangeUploadFiles(v, name)}
